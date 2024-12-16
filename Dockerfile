@@ -13,9 +13,6 @@ RUN npm install
 # Copy the rest of the application files
 COPY . .
 
-# Copy the API credentials JSON file into the container (adjust the path as needed)
-COPY test-api.json /usr/src/app/test-api.json
-
 # Expose port (if needed for a web server or API)
 EXPOSE 5000
 

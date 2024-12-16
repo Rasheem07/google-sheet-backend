@@ -5,7 +5,7 @@ const path = require('path')
 // Function to get cell values from Google Sheets
 async function getValues(spreadsheetId, range) {
 
-  const credentials = path.join(__dirname, "api-key.json");
+  const credentials = path.join(__dirname, "api-keys.json");
   console.log(credentials)
 
   // If data is not in cache, make a request to Google Sheets API
