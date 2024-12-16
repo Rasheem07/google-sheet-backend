@@ -1,32 +1,30 @@
-const { GoogleAuth } = require("google-auth-library");
-const { google } = require("googleapis");
-const path = require('path')
 
-// Function to get cell values from Google Sheets
-async function getValues(spreadsheetId, range) {
+const { GoogleAuth } = require('google-auth-library');
+const { google } = require('googleapis');
 
-  const credentials = path.join(__dirname, "api-keys.json");
-  console.log(credentials)
+// Load the credentials from the .env file
 
-  // If data is not in cache, make a request to Google Sheets API
+module.exports = async function getValues(spreadsheetId, range) {
+  const googleCredentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
+  
+  // Set up GoogleAuth with the loaded credentials
   const auth = new GoogleAuth({
-    keyFile: credentials,
-    scopes: "https://www.googleapis.com/auth/spreadsheets",
+    credentials: googleCredentials,  // Pass the credentials object directly
+    scopes: 'https://www.googleapis.com/auth/spreadsheets',  // Use the required scope
   });
-  const service = google.sheets({ version: "v4", auth });
-
+  
+  // Use this auth object to authenticate requests
+  const service = google.sheets({ version: 'v4', auth });
   try {
     const result = await service.spreadsheets.values.get({
       spreadsheetId,
       range,
     });
     const data = result.data.values;
-
     console.log(`${data.length} rows retrieved.`);
     return data;
   } catch (err) {
+    console.error('Error retrieving data: ', err);
     throw new Error(`Error retrieving data: ${err.message}`);
   }
 }
-
-module.exports = getValues
